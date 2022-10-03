@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import frame.GameFrame;
 import model.loader.ElementLoader;
@@ -43,7 +44,7 @@ public class GameStart {
 	 * @param panelName 界面名称
 	 */
 	public static void changeJPanel(String panelName){
-		if(panelName == "game") {
+		if(Objects.equals(panelName, "game")) {
 			GameController.setGameRunning(true);
 			gameFrame.addListener();
 		} else {

@@ -37,7 +37,7 @@ public class GameThread extends Thread{
 	}
 
 	//加载元素
-	private void loadElement() {
+	public void loadElement() {
 		ElementManager.getManager().loadMap();//加载地图及其元素
 	}
 
@@ -46,12 +46,12 @@ public class GameThread extends Thread{
 	 * 如果over为真则游戏失败返回界面，否则进入下一关
 	 * @param over
 	 */
-	private void overGame(Boolean over) {
+	public void overGame(Boolean over) {
 		ElementManager.getManager().overGame(over);
 	}
 
 	//显示人物，游戏流程，自动化
-	private void runGame() {
+	public void runGame() {
 		allTime = 600*1000;
 		while(running) {
 			Map<String, List<SuperElement>> map = ElementManager.getManager().getMap();
@@ -90,8 +90,8 @@ public class GameThread extends Thread{
 			}
 		}
 	}
-	
-	private void defeat() {
+
+	public void defeat() {
 		boolean allDead = true;
 		int surviveP = 0;
 		int winner = 2;//0为玩家1，1为玩家2，2为电脑获胜
@@ -147,7 +147,7 @@ public class GameThread extends Thread{
 	}
 
 	//玩家与炸弹碰撞判断
-	private void playerBoom() {
+	public void playerBoom() {
 		List<SuperElement> playerList = ElementManager.getManager().getElementList("player");
 		List<SuperElement> explodeList = ElementManager.getManager().getElementList("explode");
 		for(int i=0; i<playerList.size(); i++) {
@@ -161,7 +161,7 @@ public class GameThread extends Thread{
 		
 	}
 	//npc与炸弹碰撞判断
-	private void npcBoom() {
+	public void npcBoom() {
 		List<SuperElement> playerList = ElementManager.getManager().getElementList("player");
 		List<SuperElement> npcList = ElementManager.getManager().getElementList("npc");
 		List<SuperElement> explodeList = ElementManager.getManager().getElementList("explode");
@@ -181,7 +181,7 @@ public class GameThread extends Thread{
 	}
 
 	//障碍物与炸弹碰撞判断
-	private void fragilityBoom() {
+	public void fragilityBoom() {
 		List<SuperElement> playerList = ElementManager.getManager().getElementList("player");
 		List<SuperElement> explodes = ElementManager.getManager().getElementList("explode");
 		List<SuperElement> fragility = ElementManager.getManager().getElementList("fragility");
@@ -199,7 +199,7 @@ public class GameThread extends Thread{
 	}
 
 	//玩家与道具碰撞判断
-	private void playerMagicBox() {
+	public void playerMagicBox() {
 		List<SuperElement> playerList = ElementManager.getManager().getElementList("player");
 		List<SuperElement> magicBoxList = ElementManager.getManager().getElementList("magicBox");
 		for(int i=0; i<playerList.size(); i++) {
@@ -216,7 +216,7 @@ public class GameThread extends Thread{
 	}
 
 	//npc与道具碰撞判断
-	private void npcMagicBox() {
+	public void npcMagicBox() {
 		List<SuperElement> npcList = ElementManager.getManager().getElementList("npc");
 		List<SuperElement> magicBoxList = ElementManager.getManager().getElementList("magicBox");
 		for(int i=0; i<npcList.size(); i++) {
@@ -232,7 +232,7 @@ public class GameThread extends Thread{
 
 	//runGame调用，加入拓展
 	public void linkGame() {}
-	
+
 
 	public static int getAllTime() {
 		return allTime;

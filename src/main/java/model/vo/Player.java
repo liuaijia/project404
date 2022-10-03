@@ -66,7 +66,7 @@ public class Player extends Character{
 	//展示人物图片
 	@Override
 	public void showElement(Graphics g) {
-		if(isShowing==false) return;
+		if(!isShowing) return;
 		g.drawImage(img.getImage(),
 				getX(), getY(), 	//屏幕左上角坐标
 				getX()+getW(), getY()+getH(), 	//屏幕右下坐标

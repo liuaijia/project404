@@ -7,8 +7,7 @@ import thread.GameThread;
 import java.awt.CardLayout;
 import java.awt.event.KeyListener;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class GameFrame extends JFrame {
 	private JPanel contentPane;//主面板
@@ -27,7 +26,7 @@ public class GameFrame extends JFrame {
 	protected void init() {
 		this.setTitle("CrazyArcade");
 		List<String> data = ElementLoader.getElementLoader().getGameInfoMap().get("windowSize");
-		this.setSize(Integer.parseInt(data.get(0)), new Integer(data.get(1)).intValue());
+		this.setSize(Integer.parseInt(data.get(0)), Integer.parseInt(data.get(1)));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);

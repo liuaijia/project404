@@ -16,8 +16,8 @@ import java.util.Stack;
 
 
 public class GameKeyListener implements KeyListener{
-	private Stack<Integer> p1PressStack = new Stack<>();
-	private Stack<Integer> p2PressStack = new Stack<>();
+	private final Stack<Integer> p1PressStack = new Stack<>();
+	private final Stack<Integer> p2PressStack = new Stack<>();
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
