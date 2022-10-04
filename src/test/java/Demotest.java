@@ -1,11 +1,13 @@
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Demotest {
 
     @Test
     public void test1(){
-
-        assert add(1, 2)==3;
+        assertEquals(4,add(2,2));
     }
 
     public int add(int a, int b){
