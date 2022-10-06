@@ -57,6 +57,7 @@ class PlayerTest {
         playerExample.moveType=DOWN;
         playerExample.move();
         assertEquals(128, playerExample.getX());
+        assertEquals(128, playerExample.getY());
     }
 
 
