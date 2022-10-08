@@ -24,6 +24,7 @@ public class OverJPanel extends JPanel {
 	private int w;
 	private int h;
 	private static JButton result = new JButton();
+	private static JLabel scoreBoard=new JLabel();
 
 	//构造函数
 	public OverJPanel(){
@@ -64,9 +65,18 @@ public class OverJPanel extends JPanel {
 		result.setEnabled(false);
 		result.setForeground(new Color(255, 153, 0));
 
+		//积分输出
+
+		scoreBoard.setFont(new Font("宋体",Font.BOLD, 22));
+		scoreBoard.setForeground(Color.RED);
+		scoreBoard.setBounds(w/2, 350, 300, 300);
+		scoreBoard.setVisible(true);
+
+		this.add(scoreBoard);
 		this.add(result);
 		this.add(restart);
 		this.add(jLabel);
+
 		
 		this.setVisible(true);
 		this.setOpaque(true);
@@ -74,6 +84,9 @@ public class OverJPanel extends JPanel {
 
 	public static JButton getResult() {
 		return result;
+	}
+	public static JLabel getScoreBoard() {
+		return scoreBoard;
 	}
 	
 }

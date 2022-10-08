@@ -4,10 +4,13 @@
 #窗口
 beginBackground=src/main/resources/img/bg/title.png
 gameOver=src/main/resources/img/bg/gameover.png
+login=src/main/resources/img/bg/Login.png
 rect1=src/main/resources/img/bg/rect1.png
 rect2=src/main/resources/img/bg/rect2.png
 rect3=src/main/resources/img/bg/rect3.png
 rect4=src/main/resources/img/bg/rect4.png
+logButton=src/main/resources/img/bg/logButton.png
+gameButton=src/main/resources/img/bg/gameButton.png
 #玩家
 PlayerA=src/main/resources/img/player/player1.png
 PlayerB=src/main/resources/img/player/player2.png

@@ -22,6 +22,7 @@ public class GameThread extends Thread{
 	private static int allTime = 600*1000; //10分钟
 
 
+
 	@Override
 	public void run() {
 		while(!over) {
@@ -108,11 +109,14 @@ public class GameThread extends Thread{
 			}
 		}
 
+		//请在玩家失败或胜利后，记录分数等，并录入数据库
 		//玩家失败
 		if(surviveP==0||(allTime<=0 && !allDead)) {
 			running = false;
 			over = true;
 			OverJPanel.getResult().setText("defeated");
+			int score1 = ((Player)playerList.get(0)).score;
+			OverJPanel.getScoreBoard().setText(String.valueOf(score1));
 		}
 		//玩家胜利
 		if(allDead&&surviveP==1) {
@@ -125,6 +129,8 @@ public class GameThread extends Thread{
 				}
 			}
 			OverJPanel.getResult().setText("player "+(winner+1)+" win");
+			int score1 = ((Player)playerList.get(0)).score;
+			OverJPanel.getScoreBoard().setText("score: "+String.valueOf(score1));
 		}
 		
 		//时间到，两个玩家都活着
@@ -139,9 +145,11 @@ public class GameThread extends Thread{
 			else if(score1>score2)
 			{
 				OverJPanel.getResult().setText("player 1 win");
+				OverJPanel.getScoreBoard().setText("score: "+String.valueOf(score1));
 			}
 			else {
 				OverJPanel.getResult().setText("player 2 win");
+				OverJPanel.getScoreBoard().setText("score: "+String.valueOf(score2));
 			}
 		}
 	}
