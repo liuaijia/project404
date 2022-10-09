@@ -11,12 +11,13 @@ import javax.swing.*;
 
 public class GameFrame extends JFrame {
 	private JPanel contentPane;//主面板
+	private LoginPanel loginPanel;
 	private BeginJPanel beginJPanel;//开始画板
 	private GameJPanel gameJPanel;//画板
 	private OverJPanel overJPanel;//结束画板
 	private KeyListener keyListener; //游戏按键
 	private CardLayout layout;//卡片布局
-
+	static String uID;
 	
 	public GameFrame() {
 		init();
@@ -38,6 +39,9 @@ public class GameFrame extends JFrame {
 		
 		this.layout = new CardLayout();
 		this.contentPane.setLayout(layout);
+
+		this.loginPanel = new LoginPanel();
+		this.contentPane.add("login",loginPanel);
 		
 		this.beginJPanel = new BeginJPanel();
 		this.contentPane.add("begin",beginJPanel);
@@ -45,7 +49,7 @@ public class GameFrame extends JFrame {
 		this.overJPanel = new OverJPanel();
 		this.contentPane.add("over",overJPanel);
 		
-		this.layout.show(contentPane, "begin");
+		this.layout.show(contentPane, "login");
 		this.setVisible(true);
 	}
 
@@ -104,6 +108,12 @@ public class GameFrame extends JFrame {
 	public void setGameJPanel(GameJPanel gameJPanel) {
 		this.gameJPanel = gameJPanel;
 	}
-	
+
+	public void setuID(String id){
+		this.uID = id;
+	}
+	public String getuID(){
+		return this.uID;
+	}
 	
 }
