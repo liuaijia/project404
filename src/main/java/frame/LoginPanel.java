@@ -3,13 +3,15 @@ package frame;
 
 import main.GameStart;
 import model.loader.ElementLoader;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.*;
 
@@ -62,26 +64,13 @@ public class LoginPanel extends JPanel {
         login.setBorderPainted(false);
         login.setFocusPainted(false);
         login.setContentAreaFilled(false);
-        login.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                //后续在该处决定点击事件，用户名输入成功或错误，先写死
-                //System.out.println(jt.getText());
-                //System.out.println(pswd.getText());
-                //System.out.println(jt.getText()=="10000");
-                if(jt.getText().equals("10000") && pswd.getText().equals("123456"))
-                {
-                    //登陆成功
-                    GameStart.changeJPanel("begin");
-                    //设置GameFrame的静态变量usrID，全局共享
-                    GameFrame.uID = jt.getText();
-                }
-                else{
-                    //登陆不成功
-                    JOptionPane.showMessageDialog(null, "error userID or password");
-                }
-
+        login.addActionListener(arg0 -> {
+            if (!jt.getText().isEmpty()||!pswd.getText().isEmpty()){
+                LoginThread loginThread = new LoginThread(jt.getText(),pswd.getText());
+                new Thread(loginThread).start();
             }
+
+
         });
         //直接游戏
         JButton gaming = new JButton();
@@ -90,12 +79,9 @@ public class LoginPanel extends JPanel {
         gaming.setBorderPainted(false);
         gaming.setFocusPainted(false);
         gaming.setContentAreaFilled(false);
-        gaming.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                //直接开始游戏，没有登录，不计入排行
-                GameStart.changeJPanel("begin");
-            }
+        gaming.addActionListener(arg0 -> {
+            //直接开始游戏，没有登录，不计入排行
+            GameStart.changeJPanel("begin");
         });
 
         this.add(gaming);
@@ -107,5 +93,47 @@ public class LoginPanel extends JPanel {
         this.setOpaque(true);
     }
 
+static class LoginThread implements Runnable{
+    private final String username;
+    private final String password;
 
+    LoginThread(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void run() {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://localhost:8002/login")
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                JOptionPane.showMessageDialog(null, "network error");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseData = Objects.requireNonNull(response.body()).string();
+                if ("1".equals(responseData)){
+                    //登陆成功
+                    GameStart.changeJPanel("begin");
+                    //设置GameFrame的静态变量usrID，全局共享
+                    GameFrame.uID = username;
+                }
+                if ("0".equals(responseData)){
+                    JOptionPane.showMessageDialog(null, "error userID or password");
+                }
+            }
+        });
+
+    }
+}
 }

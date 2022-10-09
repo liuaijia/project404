@@ -265,7 +265,7 @@ public class GameMap {
 
 	/**
 	 * 获取ij位置是否可通过
-	 * @param list
+	 * @param
 	 * @return 可通过
 	 */
 	public boolean blockIsWalkable(int i,int j) {

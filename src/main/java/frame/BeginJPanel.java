@@ -1,18 +1,21 @@
 package frame;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import main.GameController;
 import main.GameStart;
 import model.loader.ElementLoader;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 
 public class BeginJPanel extends JPanel{
@@ -85,16 +88,12 @@ public class BeginJPanel extends JPanel{
 		magicBoxButton.setBorderPainted(false);
 		magicBoxButton.setFocusPainted(false);
 		magicBoxButton.setContentAreaFilled(false);
-		magicBoxButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				 // TODO 自动生成的方法存根
-				if(!jLabel2.isVisible())
-					jLabel2.setVisible(true);
-				else {
-					jLabel2.setVisible(false);
-				}
+		magicBoxButton.addActionListener(arg0 -> {
+			 // TODO 自动生成的方法存根
+			if(!jLabel2.isVisible())
+				jLabel2.setVisible(true);
+			else {
+				jLabel2.setVisible(false);
 			}
 		});
 
@@ -143,7 +142,8 @@ public class BeginJPanel extends JPanel{
 				if(!jLabel3.isVisible()){
 					jLabel3.setVisible(true);
 				    no1.setVisible(true);
-
+					RankThread rankThread = new RankThread();
+					new Thread(rankThread).start();
 				}
 				else {
 					jLabel3.setVisible(false);
@@ -167,5 +167,31 @@ public class BeginJPanel extends JPanel{
 		this.setVisible(true);
 		this.setOpaque(true);
 	}
-	
+
+	static class RankThread implements Runnable{
+
+		@Override
+		public void run() {
+			OkHttpClient client = new OkHttpClient();
+			Request request = new Request.Builder()
+					.url("http://localhost:8002/getRank")
+					.build();
+			client.newCall(request).enqueue(new Callback() {
+				@Override
+				public void onFailure(@NotNull Call call, @NotNull IOException e) {
+					JOptionPane.showMessageDialog(null, "network error");
+				}
+
+				@Override
+				public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+					String responseData = Objects.requireNonNull(response.body()).string();
+					if (!responseData.isEmpty()){
+						JSONObject jsonObject = JSON.parseObject(responseData);
+						System.out.println(jsonObject);
+					}
+				}
+			});
+
+		}
+	}
 }

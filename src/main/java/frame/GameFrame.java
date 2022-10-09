@@ -17,7 +17,7 @@ public class GameFrame extends JFrame {
 	private OverJPanel overJPanel;//结束画板
 	private KeyListener keyListener; //游戏按键
 	private CardLayout layout;//卡片布局
-	static String uID;
+	public static String uID;
 	
 	public GameFrame() {
 		init();
