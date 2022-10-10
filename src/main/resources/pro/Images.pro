@@ -2,7 +2,7 @@
 #格式：XXX=图片全路径
 #键值请注意不要重复
 #窗口
-beginBackground=src/main/resources/img/bg/title.png
+beginBackground=src/main/resources/img/bg/bg.png
 gameOver=src/main/resources/img/bg/gameover.png
 login=src/main/resources/img/bg/Login.png
 rect1=src/main/resources/img/bg/rect1.png

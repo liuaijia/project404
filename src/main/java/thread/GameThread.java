@@ -1,5 +1,6 @@
 package thread;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import frame.GameFrame;
 import frame.OverJPanel;
 import main.GameStart;
@@ -123,6 +124,7 @@ public class GameThread extends Thread{
 			OverJPanel.getResult().setText("defeated");
 			int score1 = ((Player)playerList.get(0)).score;
 			OverJPanel.getScoreBoard().setText(String.valueOf(score1));
+			//System.out.println("log");
 			uploadScore(0,score1,"分数上传成功");
 		}
 		//玩家胜利
@@ -255,7 +257,7 @@ public class GameThread extends Thread{
 	}
 
 	public void uploadScore(int num, int score, String msg){
-		if (!GameFrame.uID.isEmpty()){
+		if (GameFrame.uID!=null){
 			OkHttpClient client = new OkHttpClient();
 			RequestBody requestBody = new FormBody.Builder()
 					.add("username", GameFrame.uID)
