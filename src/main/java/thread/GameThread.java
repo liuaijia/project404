@@ -1,12 +1,19 @@
 package thread;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+import frame.GameFrame;
 import frame.OverJPanel;
 import main.GameStart;
 import model.manager.ElementManager;
 import model.vo.*;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -20,6 +27,7 @@ public class GameThread extends Thread{
 	private static int sleepTime = 20; //runGame刷新时间
 	//倒计时变量
 	private static int allTime = 600*1000; //10分钟
+
 
 
 	@Override
@@ -108,11 +116,16 @@ public class GameThread extends Thread{
 			}
 		}
 
+		//请在玩家失败或胜利后，记录分数等，并录入数据库
 		//玩家失败
 		if(surviveP==0||(allTime<=0 && !allDead)) {
 			running = false;
 			over = true;
 			OverJPanel.getResult().setText("defeated");
+			int score1 = ((Player)playerList.get(0)).score;
+			OverJPanel.getScoreBoard().setText(String.valueOf(score1));
+			//System.out.println("log");
+			uploadScore(0,score1,"分数上传成功");
 		}
 		//玩家胜利
 		if(allDead&&surviveP==1) {
@@ -125,6 +138,9 @@ public class GameThread extends Thread{
 				}
 			}
 			OverJPanel.getResult().setText("player "+(winner+1)+" win");
+			int score1 = ((Player)playerList.get(0)).score;
+			OverJPanel.getScoreBoard().setText("score: "+ score1);
+			uploadScore(1,score1,"分数和胜利次数上传成功");
 		}
 		
 		//时间到，两个玩家都活着
@@ -139,9 +155,11 @@ public class GameThread extends Thread{
 			else if(score1>score2)
 			{
 				OverJPanel.getResult().setText("player 1 win");
+				OverJPanel.getScoreBoard().setText("score: "+String.valueOf(score1));
 			}
 			else {
 				OverJPanel.getResult().setText("player 2 win");
+				OverJPanel.getScoreBoard().setText("score: "+String.valueOf(score2));
 			}
 		}
 	}
@@ -238,5 +256,36 @@ public class GameThread extends Thread{
 		return allTime;
 	}
 
+	public void uploadScore(int num, int score, String msg){
+		if (GameFrame.uID!=null){
+			OkHttpClient client = new OkHttpClient();
+			RequestBody requestBody = new FormBody.Builder()
+					.add("username", GameFrame.uID)
+					.add("num", String.valueOf(num))
+					.add("grade", String.valueOf(score))
+					.build();
+			Request request = new Request.Builder()
+					.url("http://localhost:8002/upload")
+					.post(requestBody)
+					.build();
+			client.newCall(request).enqueue(new Callback() {
+				@Override
+				public void onFailure(@NotNull Call call, @NotNull IOException e) {
+					JOptionPane.showMessageDialog(null, "network error");
+				}
+
+				@Override
+				public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+					String responseData = Objects.requireNonNull(response.body()).string();
+					if ("1".equals(responseData)){
+						JOptionPane.showMessageDialog(null, msg);
+					}
+					if ("0".equals(responseData)){
+						JOptionPane.showMessageDialog(null, "上传失败");
+					}
+				}
+			});
+		}
+	}
 
 }

@@ -33,20 +33,20 @@ class NpcTest {
         ElementLoader.getElementLoader().readSquarePro();
         ElementManager.getManager().loadMap();
         Map<String, List<String>> gameInfoMap = ElementLoader.getElementLoader().getGameInfoMap();
-        int i = 1;
-        int j = 2;
-        int npcNum = 2;//第几个npc，2为npcA，3为npcB,4为npcC
-        int x = j*MapSquare.PIXEL_X+ GameMap.getBiasX();
-        int y = i*MapSquare.PIXEL_Y+GameMap.getBiasY();
-        int w = MapSquare.PIXEL_X;//控制npc显示与一个方格大小一致
-        int h = MapSquare.PIXEL_Y;
-        List <String> data  = gameInfoMap.get("npcA");
-        List<ImageIcon> imageList =
-                new ArrayList<>(ElementLoader.getElementLoader().getNpcImageList(data.get(0)));
-        int imgW = Integer.parseInt(data.get(3));
-        int imgH = Integer.parseInt(data.get(4));
-        npcExample = new Npc(x, y, w, h, imgW, imgH, imageList, npcNum);
-        npcExample.setNpcNum(2);
+//        int i = 1;
+//        int j = 2;
+//        int npcNum = 2;//第几个npc，2为npcA，3为npcB,4为npcC
+//        int x = j*MapSquare.PIXEL_X+ GameMap.getBiasX();
+//        int y = i*MapSquare.PIXEL_Y+GameMap.getBiasY();
+//        int w = MapSquare.PIXEL_X;//控制npc显示与一个方格大小一致
+//        int h = MapSquare.PIXEL_Y;
+//        List <String> data  = gameInfoMap.get("npcA");
+//        List<ImageIcon> imageList =
+//                new ArrayList<>(ElementLoader.getElementLoader().getNpcImageList(data.get(0)));
+//        int imgW = Integer.parseInt(data.get(3));
+//        int imgH = Integer.parseInt(data.get(4));
+//        npcExample = new Npc(x, y, w, h, imgW, imgH, imageList, npcNum);
+//        npcExample.setNpcNum(2);
     }
 
     @AfterEach
@@ -164,5 +164,10 @@ class NpcTest {
     void setImgH() {
         npcExample.setImgH(111);
         assertEquals(111, npcExample.getImgH());
+    }
+
+    @Test
+    void test(){
+
     }
 }
