@@ -31,6 +31,7 @@ class NpcTest {
         ElementLoader.getElementLoader().readCharactorsPro();
         ElementLoader.getElementLoader().readBubblePro();
         ElementLoader.getElementLoader().readSquarePro();
+        ElementManager.getManager().loadMap();
         Map<String, List<String>> gameInfoMap = ElementLoader.getElementLoader().getGameInfoMap();
 //        int i = 1;
 //        int j = 2;
