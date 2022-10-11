@@ -82,7 +82,7 @@ public class GameThread extends Thread{
 			//电脑与炸弹碰撞死亡
 			npcBoom();
 			//电脑与道具碰撞效果，暂时不开启
-			//npcMagicBox();
+			npcMagicBox();
 			//玩家与道具碰撞效果
 			playerMagicBox();
 			//检测是否玩家全部死亡

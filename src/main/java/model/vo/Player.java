@@ -149,29 +149,29 @@ public class Player extends Character{
 	 * @return 没有碰撞
 	 */
 	private boolean crashDetection(int tx, int ty, List<SuperElement> list){
-		int bias = 1;//�ж���ײƫ��ֵ
-		int THRESHOLD = 25;//ƽ���ƶ���ֵ
+		int bias = 1;// 判断碰撞偏差值
+		int THRESHOLD = 25;// 平滑移动阈值
 		Rectangle playerRect = new Rectangle(tx, ty, getW(), getH());
 		Random random = new Random();
 		GameMap gameMap = ElementManager.getManager().getGameMap();
 		
 		for(SuperElement se:list) {
 			Rectangle elementRect = new Rectangle(se.getX()+bias, se.getY()+bias, se.getW()-bias, se.getH()-bias);
-			if(playerRect.intersects(elementRect)) {//�����ײ
-				switch(moveType) {//�жϷ���
+			if(playerRect.intersects(elementRect)) {// 如果碰撞
+				switch(moveType) {// 判断方向
 				case TOP:
 				case DOWN:
 					int width=Math.min(getX()+getW(),se.getX()+se.getW())-Math.max(getX(), se.getX());
-					if(width>THRESHOLD) break;//������ֵ����ƽ������
+					if(width>THRESHOLD) break;// 超过阈值不做平滑处理
 					
-					if(getX()<se.getX()) {//��������
+					if(getX()<se.getX()) {// 玩家在左边
 						if(moveType== MoveTypeEnum.TOP&&!gameMap.blockIsWalkable(GameMap.getIJ(getLeftBound(), getTopBound()-10))) break;
 						else if(moveType==MoveTypeEnum.DOWN&&!gameMap.blockIsWalkable(GameMap.getIJ(getLeftBound(), getBottomBound()+10))) break;
 						for(int i=0;i<width;i++) {
 							if(random.nextBoolean())
 								setX(getX()-1);
 						}
-					} else {
+					} else {// 玩家在右边
 						if(moveType==MoveTypeEnum.TOP&&!gameMap.blockIsWalkable(GameMap.getIJ(getRightBound(), getTopBound()-10))) break;
 						else if(moveType==MoveTypeEnum.DOWN&&!gameMap.blockIsWalkable(GameMap.getIJ(getRightBound(), getBottomBound()+10))) break;
 						for(int i=0;i<width;i++) {
@@ -185,7 +185,7 @@ public class Player extends Character{
 					int height=Math.min(getY()+getH(),se.getY()+se.getH())-Math.max(getY(), se.getY());
 					if(height>THRESHOLD) break;
 					
-					if(getY()<se.getY()) {//���������
+					if(getY()<se.getY()) {
 						if(moveType==MoveTypeEnum.LEFT&&!gameMap.blockIsWalkable(GameMap.getIJ(getLeftBound()-10, getTopBound()))) break;
 						else if(moveType==MoveTypeEnum.RIGHT&&!gameMap.blockIsWalkable(GameMap.getIJ(getLeftBound()+10, getTopBound()))) break;
 						for(int i=0;i<height;i++) {
@@ -245,7 +245,8 @@ public class Player extends Character{
 		List<Integer> loc = GameMap.getXY(GameMap.getIJ(getX()+getW()/2, getY()+getH()/2));
 		GameMap gameMap = ElementManager.getManager().getGameMap();
 		List<Integer> maplist = GameMap.getIJ(loc.get(0), loc.get(1));
-		if(attack && !dead && bubbleNum<bubbleLargest &&  //�ж��Ƿ�Ϊ����״̬����ǰ��ը����С������ֵ����ǰλ��û��ը��
+		// 判断是否为攻击状态，当前的炸弹数小于上限值，当前位置没有炸弹
+		if(attack && !dead && bubbleNum<bubbleLargest &&
 				gameMap.getBlockSquareType(maplist.get(0), maplist.get(1))!=GameMap.SquareType.BUBBLE) {
 
 			List<SuperElement> list = 

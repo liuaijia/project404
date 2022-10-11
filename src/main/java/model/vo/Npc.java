@@ -280,7 +280,7 @@ public class Npc extends Character{
 	public void move() {
 		if(step==MapSquare.PIXEL_X/Character.INIT_SPEED) {
 			step=0;
-			//autoAddBubble();
+			autoAddBubble();
 			autoAttack();
 			GameMap gameMap = ElementManager.getManager().getGameMap();
 			List<Integer> loc = GameMap.getIJ(getX(), getY());
@@ -334,7 +334,7 @@ public class Npc extends Character{
 			setY(ty);
 			step++;
 		} else {
-			//moveType = randomOrient();
+			moveType = randomOrient();
 		}
 		
 	}
