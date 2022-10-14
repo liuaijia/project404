@@ -99,9 +99,27 @@ class GameThreadTest {
         list.add(MagicBox.createMagicBox(8,1));
         list.add(MagicBox.createMagicBox(1,16));
         list.add(MagicBox.createMagicBox(8,16));
+        gameThread.playerMagicBox();
+        List<SuperElement> magicBoxList = ElementManager.getManager().getElementList("magicBox");
+        MagicBox magicBox1 = (MagicBox) magicBoxList.get(0);
+        Assertions.assertFalse(magicBox1.isEaten());
+        MagicBox magicBox2 = (MagicBox) magicBoxList.get(3);
+        Assertions.assertTrue(magicBox2.isEaten());
+
     }
 
     @Test
     void npcMagicBox() {
+        List<SuperElement> list = ElementManager.getManager().getElementList("magicBox");
+        list.add(MagicBox.createMagicBox(2,2));
+        list.add(MagicBox.createMagicBox(8,1));
+        list.add(MagicBox.createMagicBox(1,16));
+        list.add(MagicBox.createMagicBox(8,16));
+        gameThread.npcMagicBox();
+        List<SuperElement> magicBoxList = ElementManager.getManager().getElementList("magicBox");
+        MagicBox magicBox1 = (MagicBox) magicBoxList.get(1);
+        Assertions.assertFalse(magicBox1.isEaten());
+        MagicBox magicBox2 = (MagicBox) magicBoxList.get(2);
+        Assertions.assertTrue(magicBox2.isEaten());
     }
 }
