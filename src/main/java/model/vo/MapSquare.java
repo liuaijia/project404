@@ -47,5 +47,14 @@ public class MapSquare extends SuperElement{
 
 	@Override
 	public void destroy() {}
-	
+
+	public int getSx(){return sx;}
+
+	public int getSy(){return sy;}
+
+	public int getDx(){return dx;}
+
+	public int getDy(){return dy;}
+
 }
+

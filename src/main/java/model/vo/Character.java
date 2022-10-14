@@ -62,6 +62,7 @@ public class Character extends SuperElement{
 		if(heathPoint<=0)
 		{
 			setDead(true);
+			setAlive(false);
 			setX(-100);
 			setY(-100);
 		}
