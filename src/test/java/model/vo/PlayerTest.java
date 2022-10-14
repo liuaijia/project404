@@ -1,10 +1,14 @@
 package model.vo;
+import main.GameController;
 import model.loader.ElementLoader;
 import model.manager.ElementManager;
 import model.manager.GameMap;
 import static model.manager.MoveTypeEnum.*;
+
+import model.manager.MoveTypeEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -22,8 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerTest {
     Player playerExample;
 
-
-
+    Player player1,player2;
+    Npc npc1,npc2,npc3;
+    List<?> playerList;
     @BeforeEach
     //PIXEL_X=64,PIXEL_Y=64
     void setUp() throws IOException {
@@ -32,21 +37,28 @@ class PlayerTest {
         ElementLoader.getElementLoader().readCharactorsPro();
         ElementLoader.getElementLoader().readBubblePro();
         ElementLoader.getElementLoader().readSquarePro();
-        int i = 1;
-        int j = 2;
-        //System.out.println(GameMap.getBiasX()); 0
-        //System.out.println(GameMap.getBiasX()); 0
-        int x = j*MapSquare.PIXEL_X+ GameMap.getBiasX();
-        int y = i*MapSquare.PIXEL_Y+GameMap.getBiasY();
-        int w = MapSquare.PIXEL_X;
-        int h = MapSquare.PIXEL_Y;
-        int playernum = 1;
-        Map<String, ImageIcon> imageMap =
-                ElementLoader.getElementLoader().getImageMap();//获取资源加载器的图片字典
-        List<String> data = new ArrayList<>();
-        data.add("player2");
-        System.out.println(imageMap);
-        playerExample = new Player(x, y, w, h, imageMap.get(data.get(0)),playernum);
+        GameController.setTwoPlayer(true);
+        ElementManager.getManager().loadMap();
+        playerList = ElementManager.getManager().getElementList("player");
+        player1 = (Player) playerList.get(0);
+        player2 = (Player) playerList.get(1);
+//        System.out.println(ElementManager.getManager().getMap());
+//        int i = 1;
+//        int j = 1;
+//        //System.out.println(GameMap.getBiasX()); 0
+//        //System.out.println(GameMap.getBiasX()); 0
+//        int x = j*MapSquare.PIXEL_X+ GameMap.getBiasX();
+//        int y = i*MapSquare.PIXEL_Y+GameMap.getBiasY();
+//        int w = MapSquare.PIXEL_X;
+//        int h = MapSquare.PIXEL_Y;
+//        int playernum = 0;
+//        Map<String, ImageIcon> imageMap =
+//                ElementLoader.getElementLoader().getImageMap();//获取资源加载器的图片字典
+//        List<String> data = new ArrayList<>();
+//        data.add("PlayerA");
+////        System.out.println(x);
+////        System.out.println(y);
+//        playerExample = new Player(x, y, w, h, imageMap.get(data.get(0)),playernum);
     }
 
     @AfterEach
@@ -54,16 +66,24 @@ class PlayerTest {
     }
 
     @Test
-    void move() {
-//        playerExample.moveType=DOWN;
-//        playerExample.move();
-//        assertEquals(128, playerExample.getX());
-//        assertEquals(128, playerExample.getY());
+    void move() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        List<SuperElement> bubbleList = ElementManager.getManager().getElementList("bubble");
+        bubbleList.add(Bubble.createBubble(120, 130, ElementLoader.getElementLoader().getGameInfoMap().get("bubble"),2,1));
+        bubbleList.add(Bubble.createBubble(120, 706, ElementLoader.getElementLoader().getGameInfoMap().get("bubble"),2,1));
+        MoveTypeEnum[] moveType = new MoveTypeEnum[] {TOP, LEFT, RIGHT, DOWN, STOP};
+        player1 = (Player) playerList.get(0);
+        int i = 4;
+        int[] expectX = new int[]{120, 120, 124, 120, 120};
+        int[] expectY = new int[]{66, 66, 66, 66, 66};
+        player1.moveType = moveType[i];
+        player1.move();
+        assertEquals(expectX[i],player1.getX());
+        assertEquals(expectY[i],player1.getY() );
     }
 
 
     @Test
-    void updateImage() throws IllegalAccessException, NoSuchFieldException {
+    void updateImage() {
         playerExample.moveType =  LEFT;
         playerExample.setMoveX(23);
         playerExample.updateImage();
@@ -71,24 +91,42 @@ class PlayerTest {
         assertEquals(1, playerExample.getMoveY());
     }
     @Test
-    void bubbleCrashDetection() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        int tx = playerExample.getX();
-        int ty = playerExample.getY();
-        Method method = playerExample.getClass().getDeclaredMethod("bubbleCrashDetection", int.class, int.class, List.class);
+    //player检测碰撞
+    void crashDetection() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        player1.setX(185);
+        player1.setY(66);
+        Method method = player1.getClass().getDeclaredMethod("crashDetection", int.class, int.class, List.class);
         method.setAccessible(true);
-        boolean result = (boolean) method.invoke(playerExample, tx,ty,ElementManager.getManager().getElementList("bubble"));
-        assertEquals(true, result);
-
+        //上下左右四个方向移动
+        int [] moveX = new int [] {0, 0, -4, 4};
+        int [] moveY = new int [] {-4, 4, 0, 0};
+        //预期值
+        boolean [] expect = new boolean[]  {false, false, true, false};
+        for(int i = 0;i < 4;i++){
+            int tx = player1.getX() + moveX[i];
+            int ty = player1.getY() + moveY[i];
+            boolean result1 = (boolean) method.invoke(player1, tx,ty,ElementManager.getManager().getElementList("obstacle"));
+            boolean result2 = (boolean) method.invoke(player1, tx,ty,ElementManager.getManager().getElementList("fragility"));
+            assertEquals(expect[i], result1 && result2);
+        }
     }
     @Test
-    void crashDetection() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        int tx = playerExample.getX();
-        int ty = playerExample.getY();
-        Method method = playerExample.getClass().getDeclaredMethod("crashDetection", int.class, int.class, List.class);
-        method.setAccessible(true);
-        boolean result = (boolean) method.invoke(playerExample, tx,ty,ElementManager.getManager().getElementList("obstacle"));
-        assertEquals(true, result);
-
+    void bubbleCrashDetection() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        List<SuperElement> bubbleList = ElementManager.getManager().getElementList("bubble");
+        bubbleList.add(Bubble.createBubble(120, 130, ElementLoader.getElementLoader().getGameInfoMap().get("bubble"),2,1));
+        bubbleList.add(Bubble.createBubble(120, 706, ElementLoader.getElementLoader().getGameInfoMap().get("bubble"),2,1));
+        int tx1 = player1.getX();
+        int ty1 = player1.getY() + 4;
+        Method method1 = player1.getClass().getDeclaredMethod("bubbleCrashDetection", int.class, int.class, List.class);
+        method1.setAccessible(true);
+        boolean result1 = (boolean) method1.invoke(player1, tx1,ty1,ElementManager.getManager().getElementList("bubble"));
+        assertEquals(false, result1);
+        int tx2 = player2.getX();
+        int ty2 = player2.getY() - 4;
+        Method method2 = player2.getClass().getDeclaredMethod("bubbleCrashDetection", int.class, int.class, List.class);
+        method2.setAccessible(true);
+        boolean result2 = (boolean) method2.invoke(player2, tx2,ty2,ElementManager.getManager().getElementList("bubble"));
+        assertEquals(true, result2);
     }
     @Test
     void addBubble() {
@@ -100,6 +138,7 @@ class PlayerTest {
 
     @Test
     void getImg() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println(playerExample.getImg());
         Field field = playerExample.getClass().getDeclaredField("img");
         field.setAccessible(true);
         ImageIcon result = (ImageIcon) field.get(playerExample);
