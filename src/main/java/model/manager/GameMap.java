@@ -86,13 +86,13 @@ public class GameMap {
 				floorList.add(MapFloor.createMapFloor(typeMap.get(type),i, j));
 			}
 		}
-		
+//		System.out.println("--"+ElementManager.getManager().getElementList("floor").size());
 	}
 
 	//创建地图元素
 	private void createSquare() {
 		Map<String, List<String>> typeMap = ElementLoader.getElementLoader().getSquareTypeMap();
-		Map<String, List<SuperElement>>elmenteMap = ElementManager.getManager().getMap();
+		Map<String, List<SuperElement>>elementMap = ElementManager.getManager().getMap();
 		Map<String, List<String>> gameInfoMap = ElementLoader.getElementLoader().getGameInfoMap();
 		int npcNum = 0;
 		for (int i = 0; i < mapRows; i++) {
@@ -101,13 +101,13 @@ public class GameMap {
 				switch (type.charAt(0)) {
 				case '0':
 					if(type.equals("00")) break;//����ǽ
-					elmenteMap.get("obstacle").add(MapObstacle.createMapObstacle(typeMap.get(type), i, j));
+					elementMap.get("obstacle").add(MapObstacle.createMapObstacle(typeMap.get(type), i, j));
 					break;
-				case '2': 
-					elmenteMap.get("fragility").add(MapFragility.createMapFragility(typeMap.get(type), i, j));
+				case '2':
+					elementMap.get("fragility").add(MapFragility.createMapFragility(typeMap.get(type), i, j));
 					break;
 				case '3':
-					elmenteMap.get("magicBox").add(MagicBox.createMagicBox(i, j));
+					elementMap.get("magicBox").add(MagicBox.createMagicBox(i, j));
 					break;
 				case '6':
 					initPlayer(i, j, 0);
@@ -117,18 +117,18 @@ public class GameMap {
 						initPlayer(i, j, 1);
 					else {
 						switch (type.charAt(1)) {
-						case '1':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcA"), i, j, npcNum++));break;
-						case '2':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcB"), i, j, npcNum++));break;
-						case '3':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcC"), i, j, npcNum++));break;
+						case '1':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcA"), i, j, npcNum++));break;
+						case '2':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcB"), i, j, npcNum++));break;
+						case '3':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcC"), i, j, npcNum++));break;
 						default:break;
 						}
 					}
 					break;
 				case '8':
 					switch (type.charAt(1)) {
-					case '1':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcA"), i, j, npcNum++));break;
-					case '2':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcB"), i, j, npcNum++));break;
-					case '3':elmenteMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcC"), i, j, npcNum++));break;
+					case '1':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcA"), i, j, npcNum++));break;
+					case '2':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcB"), i, j, npcNum++));break;
+					case '3':elementMap.get("npc").add(Npc.createNpc(gameInfoMap.get("npcC"), i, j, npcNum++));break;
 					default:break;
 					}
 					
@@ -152,7 +152,6 @@ public class GameMap {
 			biasY = (windowH-MapSquare.PIXEL_Y*mapRows)/2;
 			createFloor();
 			createSquare();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -186,7 +185,7 @@ public class GameMap {
 			} else {
 				return;
 			}
-			playerList.add(num, player);				
+			playerList.add(num, player);
 		}
 	}
 
